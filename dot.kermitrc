@@ -1,0 +1,6 @@
+; $Id: dot.kermitrc,v 1.1 2009/07/23 00:05:02 ak Exp $
+set line /dev/cu.usbmodemUSB-COM1
+set speed 9600
+set carrier-watch off
+set parity none
+

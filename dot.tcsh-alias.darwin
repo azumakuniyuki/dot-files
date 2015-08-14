@@ -1,0 +1,89 @@
+# $Id: dot.tcsh-alias.darwin,v 1.3 2009/10/08 03:15:40 ak Exp $
+#                                                                              
+#    ##               ##               ##                          ##          
+#  ###### ####  ##### ##               ##   ####  #####  ##  ##        #####   
+#    ##  ##    ##     #####         #####      ## ##  ## ##  ##   ###  ##  ##  
+#    ##  ##     ####  ##  ##       ##  ##   ##### ##     ######    ##  ##  ##  
+#    ##  ##        ## ##  ##    ## ##  ##  ##  ## ##     ######    ##  ##  ##  
+#     ### #### #####  ##  ##    ##  #####   ##### ##     ##  ##   #### ##  ##  
+#  ____ ____ ____ ____ _________ ____ ____ ____ ____ ____ 
+# ||L |||o |||n |||g |||       |||P |||a |||t |||h |||s ||
+# ||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|
+#
+set xa = "/Applications"
+set la = "${xa}/LocalApplications"
+set ut = "${xa}/Utilities"
+
+#  ____ ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ ____ ____ 
+# ||U |||s |||e |||r |||       |||C |||o |||m |||m |||a |||n |||d |||s ||
+# ||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
+# 
+alias ls        "ls -v"
+alias ldd       "/usr/bin/otool -L"
+alias spotlight '/usr/bin/mdfind'
+alias quicklook '/usr/bin/qlmanage -p \!* >& /dev/null'
+alias ql        quicklook
+alias o         /usr/bin/open
+
+#  ____ ____ ____ ____ ____ _________ ____ _________ ____ ____ ____ ____ 
+# ||M |||a |||c |||O |||S |||       |||X |||       |||A |||p |||p |||s ||
+# ||__|||__|||__|||__|||__|||_______|||__|||_______|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/_______\|/__\|/__\|/__\|/__\|
+# 
+alias mailx     "open -a ${xa}/Mail.app"
+alias safari    "open -a ${xa}/Safari.app"
+alias itunes    "open -a ${xa}/iTunes.app"
+alias ical      "open -a ${xa}/iCal.app"
+alias calc      "open -a ${xa}/Calculator.app"
+alias addrbook  "open -a '${xa}/Address Book.app'"
+alias syspref   "open -a '${xa}/System Preferences.app'"
+alias actimon   "open -a '${ut}/Activity Monitor.app'"
+alias diskutil  "open -a '${ut}/Disk Utility.app'"
+
+#  ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ 
+# ||L |||o |||c |||a |||l |||       |||A |||p |||p |||s ||
+# ||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|
+#
+if( -e "${la}/Gimp.app" ) alias gimp "open -a ${la}/Gimp.app"
+if( -e "${la}/Inkscape.app" ) alias inkscape "open -a ${la}/Inkscape.app"
+if( -e "${la}/TeXShop.app" ) alias LaTeX "open -a ${la}/TeXShop.app"
+if( -e "${la}/BathyScaphe.app" ) alias 2ch "open -a ${la}/BathyScaphe.app"
+if( -e ${la}/"Chicken of the VNC.app" ) alias cotvnc "open -a '${la}/Chicken of the VNC.app'"
+if( -e "${la}/Navigator.app" ) alias netscape "open -a ${la}/Navigator.app"
+if( -e "${la}/Twitterrific.app" ) alias tweet "open -a ${la}/Twitterrific.app"
+
+#  ____ ____ ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ 
+# ||M |||i |||c |||r |||o |||s |||o |||f |||t |||       |||A |||p |||p |||s ||
+# ||__|||__|||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|
+#
+if( -e ${la}/"Microsoft Messenger.app" ) alias messenger "open -a '${la}/Microsoft Messenger.app'"
+if( -e ${la}/"Internet Explorer.app" ) alias ie "open -a '${la}/Internet Explorer.app'"
+
+# Microsoft Office:mac 2004
+if( -e ${xa}/"Microsoft Office 2004" ) then
+    alias excel "open -a '${xa}/Microsoft Office 2004/Microsoft Excel'"
+    alias word  "open -a '${xa}/Microsoft Office 2004/Microsoft Word'"
+    alias ppt   "open -a '${xa}/Microsoft Office 2004/Microsoft PowerPoint'"
+endif
+
+#  ____ ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ ____ 
+# ||I |||n |||t |||e |||r |||n |||e |||t |||       |||S |||i |||t |||e |||s ||
+# ||__|||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__||
+# |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|
+
+alias Gmail     'open https://gmail.com/'
+alias Google        'open http://www.google.com/search\?hl=ja\&q=\!*'
+alias iGoogle       'open http://www.google.com'
+alias twitter       'open http://www.twitter.com/'
+alias slashdot      'open http://slashdot.jp/'
+alias wikipedia     "open 'http://ja.wikipedia.org/wiki/\!*'"
+alias urbandict     "open 'http://www.urbandictionary.com/define.php?term=\!*'"
+
+unset xa
+unset la
+unset ut
+

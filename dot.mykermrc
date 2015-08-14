@@ -1,0 +1,4 @@
+; $Id: dot.mykermrc,v 1.1 2009/07/23 00:05:02 ak Exp $ 
+;
+; set prompt "\v(name)> "
+set prompt "\v(program)@\v(osname)> "

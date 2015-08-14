@@ -1,0 +1,12 @@
+! $Id: dot.Xresources,v 1.1 2009/07/23 00:05:02 ak Exp $
+KTerm*background: #44617B
+KTerm*foreground: #F8F4E6
+! KTerm*VT100*geometory: 169x54
+KTerm*VT100*textColor0: Black
+KTerm*VT100*textColor1: OrangeRed
+KTerm*VT100*textColor2: yellowgreen
+KTerm*VT100*textColor3: goldenrod
+KTerm*VT100*textColor4: RoyalBlue3
+KTerm*VT100*textColor5: dodgerblue
+KTerm*VT100*textColor6: LightSkyBlue2
+KTerm*VT100*textColor7: grey85
