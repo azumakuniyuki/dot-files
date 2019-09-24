@@ -34,6 +34,8 @@ set history=50      " keep 50 lines of command line history
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
+set cursorcolumn    " Highlight the screen column of the cursor(hl-CursorColumn)
+set nocursorline    " Highlight the screen line of the cursor(hl-CursorLine)
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
@@ -177,6 +179,8 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set colorcolumn=80
+" execute "set colorcolumn=" . join(range(81, 999), ',')
+
 " set shiftround
 set expandtab
 set smartindent
@@ -209,7 +213,7 @@ set viminfo=
 set noswapfile
 set noundofile
 set autoread
-set backupdir=$HOME/var/backups/vim
+set backupdir=$HOME/var/spool/vim
 set wildmode=longest,list,full
 
 abbr RULER \|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|
@@ -256,6 +260,8 @@ let loaded_zipPlugin = 255          " plugin/zipPlugin.vim
 " lightline.vim
 " https://github.com/itchyny/lightline.vim
 let g:lightline = { 'colorscheme': 'wombat' }
+
+let g:ruby_path = '' 
 
 " Language libraries for Kaoriya
 " See http://code.google.com/p/macvim-kaoriya/wiki/Readme

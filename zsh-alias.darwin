@@ -24,22 +24,24 @@ if [ -x '/usr/bin/open' ]; then
 
     alias o='/usr/bin/open'
 
-    alias tex="o -a $xa/TexShop.app"
+    alias twitter="o -a '$xa/Twitterrific.app'"
     alias mailx="o -a $xa/Mail.app"
-    alias opera="o -a $xa/Opera.app"
     alias safari="o -a $xa/Safari.app"
     alias chrome="o -a '$xa/Google Chrome.app'"
+    alias vivaldi="o -a '$xa/Vivaldi.app'"
+    alias opera="o -a $xa/Opera.app"
     alias firefox="o -a $xa/Firefox.app"
+    alias slack="o -a $xa/Slack.app"
+
+    alias tex="o -a $xa/TexShop.app"
     alias itunes="o -a $xa/iTunes.app"
     alias ical="o -a $xa/iCal.app"
     alias calc="o -a $xa/Calculator.app"
     alias addrbook="o -a '$xa/Address Book.app'"
     alias syspref="o -a '$xa/System Preferences.app'"
     alias wunderlist="o -a $xa/Wunderlist.app"
-    alias echofon="o -a '$xa/EchofonLite.app'"
     alias dictionary="o -a $xa/Dictionary.app"
     alias skype="o -a $xa/Skype.app"
-
     alias actimon="o -a '${ut}/Activity Monitor.app'"
     alias diskutil="o -a '${ut}/Disk Utility.app'"
 

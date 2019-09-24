@@ -65,9 +65,11 @@ endif
 " set guifont=M+2VM+IPAG\ circle\ Regular:h12.5
 " set guifontwide=M+2VM+IPAG\ circle\ Regular:h12.5
 " set guifont=Migu\ 2M\ Regular:h14
-set guifont=Envy\ Code\ R:h13.5
-set linespace=2
-
+" set guifont=Envy\ Code\ R:h13.5
+set guifont=Mensch:h13
+" set macligatures
+" set guifont=Fira\ Code:h13
+set linespace=1
 
 
 "---------------------------------------------------------------------------
@@ -92,7 +94,7 @@ set linespace=2
 " set statusline=\ \ \ \ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 " 1440x900(MacBook Air)
-set columns=169     " Width
+set columns=155     " Width
 set lines=44        " Height
 set cmdheight=1     " Command line at bottom of window
 
@@ -114,8 +116,8 @@ hi CursorIM  guifg=black  guibg=red  gui=NONE  ctermfg=black  ctermbg=white  cte
 " color nebuchadnezzar
 " color heiankyo
 " color russian-blue
-color mikeneko
-" color shironeko
+" color mikeneko
+color shironeko
 " color sabineko
 
 highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#e2041b

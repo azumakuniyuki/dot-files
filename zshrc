@@ -5,17 +5,10 @@
 #  _ / /\__ \ | | | | | (__ 
 # (_)___|___/_| |_|_|  \___|
 #                           
-# ~/.zshrc                              ( symbolic link )
-# ~/share/dot-files/dot.zshrc           ( this file )
-# ~/share/dot-files/dot.zsh-complete    ( command complements )
-# ~/share/dot-files/dot.zsh-alias.*     ( command aliases )
-# ~/share/dot-files/dot.zsh-x11         ( x11 settings )
-# ~/share/hosts-and-users/host.*        ( hostnames for command complements )
-# ~/share/hosts-and-users/addr.*        ( IP addresses for command complements )
-# ~/share/hosts-and-users/user.*        ( usernames for command complements )
-# ~/.cvsroot                            ( for CVSROOT env.varialble )
-# ~/.myaddr                             ( contains my mail address )
-# ~/.ssh-agent                          ( ssh-agent boot switch )
+# ~/.zshrc                          (symbolic link)
+# ~/etc/zshrc                       (this file)
+# ~/etc/dot-files/dot.zsh-alias.*   (command aliases)
+# ~/.ssh-agent                      (ssh-agent boot switch)
 #
 # As a login-shell
 #   1. ~/.zshenv
@@ -50,27 +43,9 @@ eucjp='ja_JP.eucJP'
 utf8jp='ja_JP.UTF-8'
 ttyname=$(basename `tty`)
 
-# HTTP User-Agent
-ua_http01='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; .NET CLR 1.0.3705; .NET CLR 1.1.4322)'
-ua_http02='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)'
-ua_http03='Opera/9.00 (Windows NT 5.1; U; en)'
-ua_http04='Mozilla/5.0 (X11; U; SunOS sun4u; en-US; rv:1.8)Gecko/20051130 Firefox/1.5'
-ua_http05='Mozilla/5.0 (Windows; U; Windows NT 5.2; ja-JP;rv:1.7.12) Gecko/20050919 Firefox/1.0.7'
-ua_http10='DoCoMo/2.0 P900iV(c100;TB;W24H11)'
-ua_http11='Vodafone'
-ua_http12='KDDI-KC32 UP.Browser/6.2.0.7.3.129 (GUI) MMP/2.0'
-
-loginnames=''
-zshaliases=''
-if [ -d "$HOME/share" ]; then
-    if [ -d "$HOME/share/dot-files" ]; then
-        dotfiles="$HOME/share/dot-files"
-        zshaliases="$dotfiles/dot.zsh-alias.$OSTYPE"
-    fi
-
-    if [ -d "$HOME/share/hosts-and-users" ]; then
-        loginnames="$HOME/share/host-and-users"
-    fi
+if [ -d "$HOME/etc" ]; then
+    zshalias="$HOME/etc/zsh-alias.$OSTYPE"
+    test -e $zshalias && source $zshalias
 fi
 
 #  ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ 
@@ -83,7 +58,7 @@ typeset -U path
 dirs_in_usr=(bin sbin games ucb X11R6/bin)
 dirs_in_home=(script bin sbin opt/bin opt/sbin)
 dirs_in_local=(
-    teTeX ghostscript sendmail pgsql postgres postgresql mysql sqlite
+    go teTeX ghostscript sendmail pgsql postgres postgresql mysql sqlite
     named apache httpd httpd2 uucp openssl clamXav clamav git subversion
     mercurial nginx MacGPG2 texlive
 )
@@ -104,6 +79,7 @@ for x in $dirs_in_usr; do
     done
     test -d /$x && path=($path /$x)
 done
+test -d $HOME/.go && path=($path $HOME/.go/bin)
 
 #  ____ ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ 
 # ||M |||a |||n |||p |||a |||g |||e |||s |||       |||P |||a |||t |||h ||
@@ -139,11 +115,11 @@ elif [ -x '/bin/vi' ]; then
 else
     export EDITOR=vi
     export VISUAL=vi
-
 fi
 
 export EDITOR="$EDITOR $vioptions"
 export VISUAL="$VISUAL $vioptions"
+export GOHOME="$HOME/.go"
 
 export DISPLAY='127.0.0.1:0.0'
 export PAGER='less -r'
@@ -157,19 +133,14 @@ export LC_CTYPE=$utf8jp
 REPORTTIME=3
 WORDCHARS=${WORDCHARS:s,/,,}
 
-if [ -f "$HOME/.email" ]; then 
-    export EMAIL="`cat $HOME/.email`"
-fi
-
 if [ -e "$HOME/.cvsroot" ]; then
     export CVSROOT="`head -n 1 $HOME/.cvsroot`"
     export CVS_RSH='ssh'
     export CVSEDITOR="$EDITOR"
 fi
 
-if [ -x "`which rsync`" ]; then
-    export RSYNC_RSH='ssh'
-fi
+test -f "$HOME/.email"  && export EMAIL="`cat $HOME/.email`"
+test -x "`which rsync`" && export RSYNC_RSH='ssh'
 
 if [ -z "$REMOTEHOST" ]; then
     if [ -n "$SSH_CLIENT" ]; then
@@ -240,13 +211,14 @@ unsetopt promptcr
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
 #
 HISTFILE=~/.zhistory
-HISTSIZE=65535
+HISTSIZE=131070
 SAVEHIST=$HISTSIZE
 
 setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_expand
+setopt hist_verify
 setopt share_history
 setopt extended_history
 
@@ -272,7 +244,6 @@ zstyle ':completion:*' use-cache yes
 # zstyle ':completion:*' verbose yes
 
 # _cache_hosts=()
-
 
 
 #  ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ ____ 
@@ -308,13 +279,9 @@ alias ll='/bin/ls -Fla'
 alias lc='/bin/ls -LCF'
 
 if [ -x "`which ssh`" ]; then
-    alias ssh='ssh -v42'
-    alias fwdssh='ssh -v42 -oStrictHostKeyChecking=no -oHashKnownHosts=no'
-    alias fwdscp='scp -v42 -oStrictHostKeyChecking=no -oHashKnownHosts=no'
-fi
-
-if [ -x "`which grep`" ]; then
-    alias ip4grep="grep -E '([0-9]{1,3}\.){3}[0-9]{1,3}'"
+    alias ssh='ssh -v42 -A'
+    alias fwdssh='ssh -v42 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
+    alias fwdscp='scp -v42 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
 fi
 
 if [ -x "`which sed`" ]; then
@@ -324,17 +291,21 @@ if [ -x "`which sed`" ]; then
     alias comment-lang-c="sed -e 's|^|/* |g' -e 's|$| */|g'"
 fi
 
-if [ -x "`which wget`" ]; then
-    alias wget="wget -vnc -T 32 -U '$ua_http05'"
-fi
+# HTTP User-Agent
+ua_http01='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; .NET CLR 1.0.3705; .NET CLR 1.1.4322)'
+ua_http02='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)'
+ua_http03='Opera/9.00 (Windows NT 5.1; U; en)'
+ua_http04='Mozilla/5.0 (X11; U; SunOS sun4u; en-US; rv:1.8)Gecko/20051130 Firefox/1.5'
+ua_http05='Mozilla/5.0 (Windows; U; Windows NT 5.2; ja-JP;rv:1.7.12) Gecko/20050919 Firefox/1.0.7'
+ua_http10='DoCoMo/2.0 P900iV(c100;TB;W24H11)'
+ua_http11='Vodafone'
+ua_http12='KDDI-KC32 UP.Browser/6.2.0.7.3.129 (GUI) MMP/2.0'
 
-if [ -x "`which curl`" ]; then
-    alias curl="curl -LivfO# --connect-timeout 30 -A '$ua_http02'"
-fi
-
-if [ -x "`which sqlite3`" ]; then
-    alias sqlite='sqlite3 -header -column'
-fi
+test -x "`which grep`"    && alias ip4grep="grep -E '([0-9]{1,3}\.){3}[0-9]{1,3}'"
+test -x "`which wget`"    && alias wget="wget -vnc -T32 -U '$ua_http05'"
+test -x "`which curl`"    && alias curl="curl -LivfO# --connect-timeout 30 -A '$ua_http02'"
+test -x "`which sqlite3`" && alias sqlite='sqlite3 -header -column'
+test -x "`which ansible-playbook`" && alias ap='ansible-playbook'
 
 if [ -x "`which git`" ]; then
     alias git-logx='git log --graph --decorate --pretty=format:"%ad [%cn] <c:%h t:%t p:%p> %n %Cgreen%d%Creset %s %n" --stat -p'
@@ -343,11 +314,6 @@ if [ -x "`which git`" ]; then
     alias git-stat='git status'
 fi
 
-if [ -x "`which ansible-playbook`" ]; then
-    alias ap='ansible-playbook'
-fi
-
-test -e $zshaliases && source $zshaliases
 
 #  ____ ____ ____ ____ ____ ____ ____ ____ ____ 
 # ||F |||u |||n |||c |||t |||i |||o |||n |||s ||
@@ -384,7 +350,7 @@ bindkey '|' self-insert-no-autoremove
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|
 #
-if [ -r "$HOME/.ssh-agent" -a -r `head -n 1 $HOME/.ssh-agent` ]; then
+if [ -r "$HOME/.ssh-agent" ]; then
 
     ap=(`ps x | grep -i ssh-agent | grep -v 'grep'`)
 
@@ -394,7 +360,9 @@ if [ -r "$HOME/.ssh-agent" -a -r `head -n 1 $HOME/.ssh-agent` ]; then
         SSH_AUTH_SOCK="`find /var/folders /tmp/ -user $USER -name 'agent.*' -type s 2> /dev/null | tr -s '/'`"
     else
         eval `ssh-agent` 2> /dev/null
-        ssh-add
+        for v in `cat $HOME/.ssh-agent`; do
+            ssh-add $v
+        done
     fi
     unset ap
 fi
