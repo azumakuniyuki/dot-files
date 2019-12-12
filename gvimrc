@@ -66,10 +66,11 @@ endif
 " set guifontwide=M+2VM+IPAG\ circle\ Regular:h12.5
 " set guifont=Migu\ 2M\ Regular:h14
 " set guifont=Envy\ Code\ R:h13.5
-set guifont=Mensch:h13
+" set guifont=Mensch:h13
+set guifont=Cascadia\ Code:h13
 " set macligatures
 " set guifont=Fira\ Code:h13
-set linespace=1
+set linespace=0
 
 
 "---------------------------------------------------------------------------
@@ -95,8 +96,8 @@ set linespace=1
 
 " 1440x900(MacBook Air)
 set columns=155     " Width
-set lines=44        " Height
-set cmdheight=1     " Command line at bottom of window
+set lines=49        " Height
+set cmdheight=1     " Command line at bottom of win
 
 " http://opentechpress.jp/developer/07/11/06/0151231.shtml
 " set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
