@@ -26,6 +26,7 @@ if [ -x '/usr/bin/open' ]; then
 
     alias twitter="o -a '$xa/Twitterrific.app'"
     alias mailx="o -a $xa/Mail.app"
+    alias spark="o -a $xa/Spark.app"
     alias safari="o -a $xa/Safari.app"
     alias chrome="o -a '$xa/Google Chrome.app'"
     alias vivaldi="o -a '$xa/Vivaldi.app'"
