@@ -8,7 +8,7 @@
 # ~/.zshrc                          (symbolic link)
 # ~/etc/zshrc                       (this file)
 # ~/etc/dot-files/dot.zsh-alias.*   (command aliases)
-# ~/.ssh-agent                      (ssh-agent boot switch)
+# ~/.ssh/secret-keys                (ssh-agent boot switch)
 #
 # As a login-shell
 #   1. ~/.zshenv
@@ -26,8 +26,7 @@
 # When logout from zsh as a login shell
 #   1. ~/.zlogout
 #
-################################################################################
-
+#--------------------------------------------------------------------------------------------------
 #  ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ ____ ____ ____ 
 # ||S |||h |||e |||l |||l |||       |||V |||a |||r |||i |||a |||b |||l |||e |||s ||
 # ||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__||
@@ -74,12 +73,17 @@ for x in $dirs_in_local; do
 done
 
 for x in $dirs_in_usr; do
-    for y in /usr/local /usr /opt/local /opt; do
+    for y in /usr/local /usr /opt/local /opt /opt/homebrew; do
         test -d $y/$x && path=($path $y/$x)
     done
     test -d /$x && path=($path /$x)
 done
-test -d $HOME/.go && path=($path $HOME/.go/bin)
+
+# Rust is installed now. Great!
+#   To get started you may need to restart your current shell. This would reload your PATH environ-
+#   ment variable to include Cargo's bin directory ($HOME/.cargo/bin).
+#   To configure your current shell, run:
+test -f ./.cargo/env && source $HOME/.cargo/env
 
 #  ____ ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ 
 # ||M |||a |||n |||p |||a |||g |||e |||s |||       |||P |||a |||t |||h ||
@@ -119,7 +123,14 @@ fi
 
 export EDITOR="$EDITOR $vioptions"
 export VISUAL="$VISUAL $vioptions"
-export GOHOME="$HOME/.go"
+
+export GOROOT="/usr/local/go"
+export GOPATH="/opt/go"
+
+if [ -d $GOPATH ]; then
+    path=($path $GOPATH/bin)
+    export GO111MODULE="on"
+fi
 
 export DISPLAY='127.0.0.1:0.0'
 export PAGER='less -r'
@@ -182,23 +193,20 @@ export GREP_OPTIONS='--binary-files=without-match'
 # /,~   : $cwd
 # ?     : $?
 #
-case ${UID} in
-    0)
-        PROMPT="%B%{[31m%}%/#%{[m%}%b "
-        PROMPT2="%B%{[31m%}%_#%{[m%}%b "
-        SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
-        [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-        ;;
-    *)
-        PROMPT="%{%U%}%n@%m($ttyname):%{%B%}%c%{%b%}(%?)%{%u%} %# "
-        PROMPT2=" %B(%_%) %b %% "
-        SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
-        RPROMPT="-[%j]"
-        if [ -n "${REMOTEHOST}${SSH_CONNECTION}" -a $REMOTEHOST != 'localhost' ]; then
-            PROMPT="${HOST%%.*} => ${PROMPT}"
-        fi
-    ;;
-esac
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' formats '[%b]'
+zstyle ':vcs_info:*' actionformats '[%b|%a]'
+precmd () { vcs_info }
+
+# PROMPT="%{%U%}%n@%m($ttyname):%{%B%}%c%{%b%}(%?)%{%u%} %# "
+PROMPT="%n@$ttyname:%{%B%}%c%{%b%}(%?)%{%u%} %# "
+PROMPT2=" %B(%_%) %b %% "
+SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
+RPROMPT='${vcs_info_msg_0_} %T'
+
+if [ -n "${REMOTEHOST}${SSH_CONNECTION}" -a $REMOTEHOST != 'localhost' ]; then
+    PROMPT="${HOST%%.*} => ${PROMPT}"
+fi
 
 setopt prompt_subst
 setopt prompt_percent
@@ -227,9 +235,10 @@ setopt extended_history
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
 #
-autoload -U compinit && compinit
-
-setopt magic_equal_subst
+setopt auto_param_keys      # ( and )
+setopt auto_param_slash     # "/" in the directory name
+setopt list_types           # Like a `ls -F`
+setopt magic_equal_subst    # After "=" character in the command-line option
 # setopt complete_in_word
 # setopt glob_complete
 # setopt mark_dirs
@@ -243,7 +252,8 @@ zstyle ':completion:*' use-cache yes
 # zstyle ':completion:*' completer _oldlist _complete _match _history _ignored _prefix
 # zstyle ':completion:*' verbose yes
 
-# _cache_hosts=()
+_cache_hosts=(`grep -E '^Host [0-9A-Za-z]' ~/.ssh/config | awk '{ print $2 }'`)
+autoload -U compinit && compinit
 
 
 #  ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ ____ 
@@ -272,16 +282,20 @@ alias up='cd ../;pwd'
 alias today="date '+%F'"
 alias vi="vi $vioptions"
 alias rot13="tr '[a-zA-Z]' '[n-za-mN-ZA-M]'"
+alias tohex="perl -lE 'printf(qq|%x\n|, shift)'"
+alias hexto="perl -lE 'printf(qq|%d\n|, hex(shift))'"
 
 alias ls='/bin/ls -1F'
 alias la='/bin/ls -laF'
 alias ll='/bin/ls -Fla'
 alias lc='/bin/ls -LCF'
+alias l1='/bin/ls -1'
 
 if [ -x "`which ssh`" ]; then
-    alias ssh='ssh -v42 -A'
-    alias fwdssh='ssh -v42 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
-    alias fwdscp='scp -v42 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
+    # alias ssh='ssh -v42 -A'
+    alias ssh='ssh -v4'
+    alias fwdssh='ssh -v4 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
+    alias fwdscp='scp -v4 -A -oStrictHostKeyChecking=no -oHashKnownHosts=no'
 fi
 
 if [ -x "`which sed`" ]; then
@@ -350,19 +364,22 @@ bindkey '|' self-insert-no-autoremove
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|
 #
-if [ -r "$HOME/.ssh-agent" ]; then
+if [ -r "$HOME/.ssh/secret-keys" ]; then
 
+    as="$HOME/.ssh/agent-sock"
     ap=(`ps x | grep -i ssh-agent | grep -v 'grep'`)
 
-    ## import running ssh-agent pid, socket
     if [ -n "$ap" ]; then
-        SSH_AGENT_PID=$ap[1]
-        SSH_AUTH_SOCK="`find /var/folders /tmp/ -user $USER -name 'agent.*' -type s 2> /dev/null | tr -s '/'`"
+        # import running ssh-agent pid, socket
+        export SSH_AGENT_PID=$ap[1]
+        export SSH_AUTH_SOCK=$as
+        # SSH_AUTH_SOCK="`find /private/tmp/com.apple.launchd.* -user $USER -name 'Listeners' -type s`"
     else
-        eval `ssh-agent` 2> /dev/null
-        for v in `cat $HOME/.ssh-agent`; do
-            ssh-add $v
+        eval `ssh-agent -a $as 2> /dev/null` 2> /dev/null
+        for v in `cat $HOME/.ssh/secret-keys`; do
+            test -f $v && ssh-add --apple-use-keychain $v
         done
+        test -S $SSH_AUTH_SOCK && ln -fs $SSH_AUTH_SOCK $as
     fi
     unset ap
 fi
@@ -373,14 +390,13 @@ fi
 # |/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|
 #
 echo
-echo "  * LOGNAME  : $USER ($UID:$GID)"
-echo "  * FROM     : $REMOTEHOST"
-echo "  * TO       : $HOST"
-echo "  * TTY      : $TTY"
-echo "  * DATE     : "`date "+%F(%a) %T" | tr "-" "/"`
-echo "  * SYSTEM   : `uname -s -r` (`uname -m`)"
-[ "$SSH_AUTH_SOCK" != "" ] && echo "  * AGENT    : $SSH_AUTH_SOCK"
-echo '_______________________________________________________________'
+printf "  * LOGNAME: %s (%d:%d)\n" $USER $UID $GID
+printf "  * FROM/TO: %s => %s\n" $REMOTEHOST $HOST
+printf "  * SESSION: %s (%s)\n" $TTY `w | grep "^$USER" | wc -l`
+printf "  * TODAY:   %s %s\n" `date "+%F(%a) %T" | tr "-" "/"`
+printf "  * SYSTEM:  %s %s (%s)\n" `uname -s -r` `uname -m`
+printf "  * AGENT:   %s\n" $SSH_AUTH_SOCK
+printf "________________________________________________________________________________________\n"
 echo
 
 #  ____ ____ ____ ____ ____ _________ ____ ____ 
