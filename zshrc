@@ -5,10 +5,10 @@
 #  _ / /\__ \ | | | | | (__ 
 # (_)___|___/_| |_|_|  \___|
 #                           
-# ~/.zshrc                          (symbolic link)
-# ~/etc/zshrc                       (this file)
-# ~/etc/dot-files/dot.zsh-alias.*   (command aliases)
-# ~/.ssh/secret-keys                (ssh-agent boot switch)
+# ~/.zshrc            (symbolic link)
+# ~/etc/zshrc         (this file)
+# ~/etc/zsh-alias.*   (command aliases)
+# ~/.ssh/secret-keys  (ssh-agent boot switch)
 #
 # As a login-shell
 #   1. ~/.zshenv
@@ -31,16 +31,9 @@
 # ||S |||h |||e |||l |||l |||       |||V |||a |||r |||i |||a |||b |||l |||e |||s ||
 # ||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
 umask 022
 limit coredumpsize 0
 watch='all'
-
-# Languages
-shiftjis='ja_JP.SJIS'
-eucjp='ja_JP.eucJP'
-utf8jp='ja_JP.UTF-8'
-ttyname=$(basename `tty`)
 
 if [ -d "$HOME/etc" ]; then
     zshalias="$HOME/etc/zsh-alias.$OSTYPE"
@@ -51,7 +44,6 @@ fi
 # ||C |||o |||m |||m |||a |||n |||d |||       |||P |||a |||t |||h ||
 # ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|
-#
 path=()
 typeset -U path
 dirs_in_usr=(bin sbin games ucb X11R6/bin)
@@ -89,7 +81,6 @@ test -f ./.cargo/env && source $HOME/.cargo/env
 # ||M |||a |||n |||p |||a |||g |||e |||s |||       |||P |||a |||t |||h ||
 # ||__|||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|
-#
 manpath=()
 typeset -U manpath
 
@@ -106,8 +97,7 @@ done
 # ||E |||n |||v |||. |||       |||V |||a |||r |||i |||a |||b |||l |||e |||s ||
 # ||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
-# vioptions='-U /dev/null -u /dev/null -c "set ai nu sm ts=8"'
+vioptions='-c "set ai nu sm ts=4"'
 if [ -x '/usr/bin/vi' ]; then
     export EDITOR='/usr/bin/vi'
     export VISUAL='/usr/bin/vi'
@@ -126,7 +116,6 @@ export VISUAL="$VISUAL $vioptions"
 
 export GOROOT="/usr/local/go"
 export GOPATH="/opt/go"
-
 if [ -d $GOPATH ]; then
     path=($path $GOPATH/bin)
     export GO111MODULE="on"
@@ -135,14 +124,10 @@ fi
 export DISPLAY='127.0.0.1:0.0'
 export PAGER='less -r'
 export TERM='xterm-256color'
-
-export LANG=$utf8jp
-export LC_MESSAGES=C
+export LANG="ja_JP.UTF-8"
 export LC_TIME=C
-export LC_CTYPE=$utf8jp
-
-REPORTTIME=3
-WORDCHARS=${WORDCHARS:s,/,,}
+export LC_MESSAGES=C
+#export LC_CTYPE=C
 
 if [ -e "$HOME/.cvsroot" ]; then
     export CVSROOT="`head -n 1 $HOME/.cvsroot`"
@@ -161,13 +146,14 @@ if [ -z "$REMOTEHOST" ]; then
     fi
 fi
 
+export REPORTTIME=3
+export WORDCHARS=${WORDCHARS:s,/,,}
 export GREP_OPTIONS='--binary-files=without-match'
 
 #  ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ 
 # ||C |||o |||m |||m |||a |||n |||d |||       |||P |||r |||o |||m |||p |||t ||
 # ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
 # Bb    : bold
 # C,c,. : `basename $cwd`
 # D     : `date "+%d"`
@@ -192,13 +178,13 @@ export GREP_OPTIONS='--binary-files=without-match'
 # %     : %
 # /,~   : $cwd
 # ?     : $?
-#
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' formats '[%b]'
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd () { vcs_info }
 
 # PROMPT="%{%U%}%n@%m($ttyname):%{%B%}%c%{%b%}(%?)%{%u%} %# "
+ttyname=$(basename `tty`)
 PROMPT="%n@$ttyname:%{%B%}%c%{%b%}(%?)%{%u%} %# "
 PROMPT2=" %B(%_%) %b %% "
 SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
@@ -217,7 +203,6 @@ unsetopt promptcr
 # ||C |||o |||m |||m |||a |||n |||d |||       |||H |||i |||s |||t |||o |||r |||y ||
 # ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
 HISTFILE=~/.zhistory
 HISTSIZE=131070
 SAVEHIST=$HISTSIZE
@@ -234,7 +219,6 @@ setopt extended_history
 # ||z |||s |||h |||       |||C |||o |||m |||p |||l |||e |||m |||e |||n |||t ||
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
 setopt auto_param_keys      # ( and )
 setopt auto_param_slash     # "/" in the directory name
 setopt list_types           # Like a `ls -F`
@@ -255,12 +239,10 @@ zstyle ':completion:*' use-cache yes
 _cache_hosts=(`grep -E '^Host [0-9A-Za-z]' ~/.ssh/config | awk '{ print $2 }'`)
 autoload -U compinit && compinit
 
-
 #  ____ ____ ____ _________ ____ ____ ____ ____ ____ ____ ____ 
 # ||z |||s |||h |||       |||O |||p |||t |||i |||o |||n |||s ||
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
 bindkey -e
 bindkey "^?" backward-delete-char
 
@@ -274,8 +256,6 @@ chpwd_functions=($chpwd_functions dirs)
 # ||z |||s |||h |||       |||A |||l |||i |||a |||s |||e |||s ||
 # ||__|||__|||__|||_______|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
-
 alias j='jobs'
 alias h='history 36'
 alias up='cd ../;pwd'
@@ -328,13 +308,44 @@ if [ -x "`which git`" ]; then
     alias git-stat='git status'
 fi
 
+if [ -x "`which aws`" ]; then
+    function clear-aws-environment-variables {
+        unset AWS_ACCESS_KEY_ID
+        unset AWS_SECRET_ACCESS_KEY
+        unset AWS_SESSION_TOKEN
+        unset AWS_DEFAULT_REGION
+    }
+    function print-aws-caller-identity {
+        aws sts get-caller-identity --no-cli-pager
+    }
+    function aws-assume-role {
+        switchfrom="$1"
+        switchesto="$2"
+        if [ -n "$switchfrom" -a -n "$switchesto" ]; then
+            tmpsession="temp-session-cr-azumakuniyuki-$(date '+%F-%a-%s')"
+            storedsess="/tmp/aws-ssm-$tmpsession"; touch $storedsess
+
+            aws sts assume-role --role-arn $switchesto              \
+                --profile=$switchfrom --region ap-northeast-1       \
+                --role-session-name $tmpsession --no-cli-pager      \
+                > $storedsess
+            chmod 400 $storedsess
+            echo $storedsess
+        fi
+    }
+fi
+
+if [ -d "$HOME/etc" ]; then
+    # Load all the zsh-alias.* except zsh-alias.$OSTYPE
+    for v in `ls -1 $HOME/etc/zsh-alias.* | grep -v $OSTYPE`; do
+        test -s $v && source $v
+    done
+fi
 
 #  ____ ____ ____ ____ ____ ____ ____ ____ ____ 
 # ||F |||u |||n |||c |||t |||i |||o |||n |||s ||
 # ||__|||__|||__|||__|||__|||__|||__|||__|||__||
 # |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
-#
-
 if [ -x "`which figlet`" ]; then
     alias figlet='figlet -w128'
     function fchar6 {
@@ -345,6 +356,13 @@ if [ -x "`which figlet`" ]; then
         echo $* | figlet -fsmkeyboard -w192
     }
 fi
+
+function d2u {
+    arg1="$1"; test -n "$arg1" || arg1=$(date '+%F')
+    arg2="$2"; test -n "$arg2" || arg2="00:00:00"
+
+    date -j -f "%Y-%m-%d %H:%M:%S" "$arg1 $arg2" "+%s"
+}
 
 function ip4rev {
     echo $* | sed 's/^\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\4.\3.\2.\1/g'
@@ -357,7 +375,6 @@ function self-insert-no-autoremove {
 }
 zle -N self-insert-no-autoremove
 bindkey '|' self-insert-no-autoremove
-
 
 #  ____ ____ ____ _________ ____ ____ ____ ____ ____ 
 # ||s |||s |||h |||       |||a |||g |||e |||n |||t ||
