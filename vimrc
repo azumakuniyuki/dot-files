@@ -36,6 +36,7 @@ set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
 set cursorcolumn    " Highlight the screen column of the cursor(hl-CursorColumn)
 set nocursorline    " Highlight the screen line of the cursor(hl-CursorLine)
+set belloff=all     " Be quiet
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
@@ -71,8 +72,8 @@ if has("autocmd")
     augroup vimrcEx
     au!
 
-    " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
+    " For all text files set 'textwidth' to 99 characters.
+    autocmd FileType text setlocal textwidth=99
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
@@ -85,7 +86,6 @@ if has("autocmd")
         \ endif
 
     augroup END
-
 else
     " always set autoindenting on
     set autoindent
@@ -99,71 +99,24 @@ if !exists(":DiffOrig")
     command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
 
-"-----------------------------------------------------------------------------
-" The following lines copied from 'http://www.kawaz.jp/pukiwiki/?vim#hb6f6961'
-"
-if &encoding !=# 'utf-8'
-    "set encoding=japan
-    "set fileencoding=japan
-    set encoding=utf-8
-    set fileencoding=utf-8
-endif
-if has('iconv')
-    let s:enc_euc = 'euc-jp'
-    let s:enc_jis = 'iso-2022-jp'
-
-    " Can iconv reads 'eucJP-ms' text ?
-    if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-        let s:enc_euc = 'eucjp-ms'
-        let s:enc_jis = 'iso-2022-jp-3'
-
-    " Can iconv reads 'JISX0213' text ?
-    elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-        let s:enc_euc = 'euc-jisx0213'
-        let s:enc_jis = 'iso-2022-jp-3'
-    endif
-
-    " Set fileencodings
-    if &encoding ==# 'utf-8'
-        let s:fileencodings_default = &fileencodings
-        let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-        let &fileencodings = &fileencodings .','. s:fileencodings_default
-        unlet s:fileencodings_default
-    else
-        let &fileencodings = &fileencodings .','. s:enc_jis
-        set fileencodings+=utf-8,ucs-2le,ucs-2
-        if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-            set fileencodings+=cp932
-            set fileencodings-=euc-jp
-            set fileencodings-=euc-jisx0213
-            set fileencodings-=eucjp-ms
-            let &encoding = s:enc_euc
-            let &fileencoding = s:enc_euc
-        else
-            let &fileencodings = &fileencodings .','. s:enc_euc
-        endif
-    endif
-
-    unlet s:enc_euc
-    unlet s:enc_jis
-endif
-
-" Set 'fileencoding' = 'encoding' if there is no Japanese text.
-if has('autocmd')
-    function! AU_ReCheck_FENC()
-        if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
-            let &fileencoding=&encoding
-        endif
-    endfunction
-    autocmd BufReadPost * call AU_ReCheck_FENC()
-endif
-
+" -----------------------------------------------------------------------------
+" Vimの内部エンコーディングをUTF-8に設定
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,euc-jp,sjis,iso-2022-jp
 set fileformats=unix,dos,mac
 if exists('&ambiwidth')
-    set ambiwidth=double
+    set ambiwidth=single
 endif
 
-"-----------------------------------------------------------------------------
+" -----------------------------------------------------------------------------
+" Configuration for Go Language
+if isdirectory(globpath($GOPATH, "src/github.com/mdempsky/gocode/vim"))
+    set runtimepath+=globpath($GOPATH, "src/github.com/mdempsky/gocode/vim")
+    set completeopt=menu,preview
+    let g:go_template_autocreate = 0
+endif
+
+" -----------------------------------------------------------------------------
 " Binary editor mode: vim -b or *.bin to boot
 augroup BinaryXXD
     autocmd!
@@ -178,7 +131,7 @@ augroup END
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set colorcolumn=80
+set colorcolumn=100
 " execute "set colorcolumn=" . join(range(81, 999), ',')
 
 " set shiftround
@@ -192,8 +145,7 @@ set wildmenu        " See :help wildmenu
 set formatoptions+=mM
 let format_allow_over_tw=1
 
-
-"---------------------------------------------------------------------------
+" -----------------------------------------------------------------------------
 set noignorecase
 set smartcase
 set noincsearch
@@ -216,14 +168,16 @@ set autoread
 set backupdir=$HOME/var/spool/vim
 set wildmode=longest,list,full
 
+" -----------------------------------------------------------------------------
 abbr RULER \|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|
-abbr HLINE ----------------------------------------------------------------------------
-abbr ULINE ____________________________________________________________________________
-abbr ILINE ############################################################################
-abbr SLINE ////////////////////////////////////////////////////////////////////////////
-abbr PLINE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-abbr 4LINE dnl ########################################################################
+abbr HLINE -----------------------------------------------------------------------------
+abbr ULINE _____________________________________________________________________________
+abbr ILINE #############################################################################
+abbr SLINE /////////////////////////////////////////////////////////////////////////////
+abbr PLINE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+abbr 4LINE dnl #########################################################################
 
+" -----------------------------------------------------------------------------
 " map <F2> :r!date +\%F
 " map <F2> a<C-R>=strftime("%F %T %z")<CR><Esc>
 map  <F1> <ESC>
@@ -244,6 +198,7 @@ nmap <ESC><ESC> :nohlsearch<CR><ESC>
 " imap () ()<Left>
 " imap <> <><Left>
 
+"---------------------------------------------------------------------------
 " Do not load the following plug-ins.
 let loaded_gzip = 0                 " plugin/gzip.vim
 let loaded_getscriptPlugin = 0      " plugin/getScriptPlugin.vim
@@ -260,8 +215,16 @@ let loaded_zipPlugin = 255          " plugin/zipPlugin.vim
 " lightline.vim
 " https://github.com/itchyny/lightline.vim
 let g:lightline = { 'colorscheme': 'wombat' }
-
 let g:ruby_path = '' 
+
+" Indent Guides
+" https://github.com/nathanaelkane/vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+let g:indent_guides_color_change_percent = 4
+let g:indent_guides_tab_guides = 0
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
 " Language libraries for Kaoriya
 " See http://code.google.com/p/macvim-kaoriya/wiki/Readme
@@ -270,3 +233,4 @@ if has('kaoriya')
     let $PYTHON_DLL = ''
     let $RUBY_DLL = ''
 endif
+
