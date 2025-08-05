@@ -67,11 +67,11 @@ endif
 " set guifont=Migu\ 2M\ Regular:h14
 " set guifont=Envy\ Code\ R:h13.5
 " set guifont=Mensch:h13
-set guifont=Cascadia\ Code:h13
-" set macligatures
 " set guifont=Fira\ Code:h13
-set linespace=0
-
+" set guifont=Cascadia\ Code:h13.5
+" set guifont=Source\ Han\ Code\ JP\ R:h14
+set guifont=0xProto:h15
+set linespace=2
 
 "---------------------------------------------------------------------------
 " IME Configurations
@@ -94,9 +94,14 @@ set linespace=0
 " set cmdheight=1   " Command line at bottom of window
 " set statusline=\ \ \ \ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
-" 1440x900(MacBook Air)
-set columns=155     " Width
-set lines=49        " Height
+" 1710x1112(MacBook Air)
+set columns=169     " Width
+set lines=55        " Height
+set cmdheight=1     " Command line at bottom of win
+
+" 3008x1692 (DELL U2723QE)
+set columns=169     " Width
+set lines=64        " Height
 set cmdheight=1     " Command line at bottom of win
 
 " http://opentechpress.jp/developer/07/11/06/0151231.shtml
@@ -113,13 +118,7 @@ hi CursorIM  guifg=black  guibg=red  gui=NONE  ctermfg=black  ctermbg=white  cte
 "    autocmd WinLeave * set nocursorline
 "    autocmd WinEnter,BufRead * set cursorline
 "  augroup END
-
-" color nebuchadnezzar
-" color heiankyo
-" color russian-blue
-" color mikeneko
-color shironeko
-" color sabineko
+color michitsuna
 
 highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#e2041b
 au BufNewFile,BufRead * match ZenkakuSpace /　/
