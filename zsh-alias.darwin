@@ -5,11 +5,9 @@
 #  / /\__ \ | | |_____| (_| | | | (_| \__ \| (_| | (_| | |   \ V  V /| | | | |
 # /___|___/_| |_|      \__,_|_|_|\__,_|___(_)__,_|\__,_|_|    \_/\_/ |_|_| |_|
 #                                                                             
-################################################################################
-test -x '/usr/bin/otool' && alias ldd='/usr/bin/otool -L'
+#--------------------------------------------------------------------------------------------------
+test -x '/usr/bin/otool'  && alias ldd='/usr/bin/otool -L'
 test -x '/usr/bin/mdfind' && alias spotlight='/usr/bin/mdfind'
-
-alias swap="ls -1 /var/vm/swapfile* |wc -l | tr -d ' '"
 
 if [ -x "`which qlmanage`" ]; then
     function quicklook {
@@ -21,40 +19,21 @@ fi
 if [ -x '/usr/bin/open' ]; then
     xa='/Applications'
     ut="$xa/Utilities"
+    sa="/System$xa"
 
     alias o='/usr/bin/open'
 
-    alias twitter="o -a '$xa/Twitterrific.app'"
-    alias mailx="o -a $xa/Mail.app"
-    alias spark="o -a $xa/Spark.app"
-    alias safari="o -a $xa/Safari.app"
+    alias dictionary="o -a $sa/Dictionary.app"
     alias chrome="o -a '$xa/Google Chrome.app'"
-    alias vivaldi="o -a '$xa/Vivaldi.app'"
+    alias discord="o -a $xa/Discord.app"
+    alias mailx="o -a $sa/Mail.app"
     alias opera="o -a $xa/Opera.app"
-    alias firefox="o -a $xa/Firefox.app"
+    alias safari="o -a $xa/Safari.app"
     alias slack="o -a $xa/Slack.app"
-
-    alias tex="o -a $xa/TexShop.app"
-    alias itunes="o -a $xa/iTunes.app"
-    alias ical="o -a $xa/iCal.app"
-    alias calc="o -a $xa/Calculator.app"
-    alias addrbook="o -a '$xa/Address Book.app'"
-    alias syspref="o -a '$xa/System Preferences.app'"
-    alias wunderlist="o -a $xa/Wunderlist.app"
-    alias dictionary="o -a $xa/Dictionary.app"
-    alias skype="o -a $xa/Skype.app"
-    alias actimon="o -a '${ut}/Activity Monitor.app'"
-    alias diskutil="o -a '${ut}/Disk Utility.app'"
-
+    alias spark="o -a $xa/Spark.app"
     alias gmail='o https://gmail.com/'
 
-    function google {
-        /usr/bin/open "http://www.google.com/search?hl=ja\&q=$*"
-    }
-
-    function wikipedia {
-        /usr/bin/open http://ja.wikipedia.org/wiki/$*
-    }
-
+    function google { /usr/bin/open "http://www.google.com/search?hl=ja\&q=$*" }
     unset xa ut
 fi
+
