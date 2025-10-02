@@ -35,3 +35,4 @@ export EDITOR='vi'
 export VISUAL='vi'
 export LESS='-g -i -M -R -W -z-4 -x4 -X'
 
+. "$HOME/.cargo/env"
