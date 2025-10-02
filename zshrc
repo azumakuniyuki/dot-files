@@ -127,7 +127,7 @@ export TERM='xterm-256color'
 export LANG="ja_JP.UTF-8"
 export LC_TIME=C
 export LC_MESSAGES=C
-#export LC_CTYPE=C
+export LC_CTYPE="ja_JP.UTF-8"
 
 if [ -e "$HOME/.cvsroot" ]; then
     export CVSROOT="`head -n 1 $HOME/.cvsroot`"
