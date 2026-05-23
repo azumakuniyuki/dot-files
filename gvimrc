@@ -51,3 +51,26 @@ highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#e2041b
 
 color michitsuna
 
+"  Tabby Stripe Background Effect
+"--------------------------------------------------------------------------------------------------
+highlight TabbySign guibg=#f5f0e1
+call sign_define('TabbyLineSign', {'linehl': 'TabbySign'})
+
+function! ApplyTabbyStripes()
+    call sign_unplace('TabbyGroup') " 既存の縞々サインを一旦すべてクリア
+    let l:total_lines = line('$')   " ファイルの全行数を取得
+    let l:line_num = 2              " 2行目からスタート
+    
+    while l:line_num <= l:total_lines
+        " 2行おきに（偶数行に）サインを設置していく
+        call sign_place(0, 'TabbyGroup', 'TabbyLineSign', bufnr('%'), {'lnum': l:line_num})
+        let l:line_num += 2
+    endwhile
+endfunction
+
+augroup TabbySignGroup
+    " ファイルを開いた時や、テキストを書き換えた時に自動実行
+    autocmd!
+    autocmd BufReadPost,BufWritePost * call ApplyTabbyStripes()
+augroup END
+
