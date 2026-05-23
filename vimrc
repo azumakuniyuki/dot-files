@@ -169,14 +169,9 @@ let g:vimsyn_embed              = ''
 let g:markdown_fenced_languages = ['go', 'perl', 'ruby', 'sh']
 
 " https://github.com/vim-airline/vim-airline
-if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
-let g:airline_left_sep = '|'
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_theme = 'minimalist'
-let g:airline_theme = 'papercolor'
-
+let s:airline_themes0 = ['base16_gruvbox_light_hard', 'base16_mocha', 'blood_red', 'fruit_punch', 'qwq', 'sierra']
+let s:random_seed    = reltime()[1]
+let s:theme_index    = s:random_seed % len(s:airline_themes0)
+let g:airline_theme  = s:airline_themes0[s:theme_index]
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
 
