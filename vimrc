@@ -9,179 +9,81 @@
 "           for OpenVMS:  sys$login:.vimrc
 "
 " http://www.ibm.com/developerworks/jp/linux/library/l-vim-script-1/
-
 " When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-    finish
-endif
-
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
-
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
+if v:progname =~? "evim" | finish | endif
 if has("vms")
     set nobackup    " do not keep a backup file, use versions instead
 else
     set backup      " keep a backup file
 endif
 
-set history=50      " keep 50 lines of command line history
-set ruler           " show the cursor position all the time
-set showcmd         " display incomplete commands
-set incsearch       " do incremental searching
-set cursorcolumn    " Highlight the screen column of the cursor(hl-CursorColumn)
-set nocursorline    " Highlight the screen line of the cursor(hl-CursorLine)
-set belloff=all     " Be quiet
-
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
-
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-    set mouse=a
-endif
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-    syntax on
-    set hlsearch
-endif
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-    " Enable file type detection.
-    " Use the default filetype settings, so that mail gets 'tw' set to 72,
-    " 'cindent' is on in C files, etc.
-    " Also load indent files, to automatically do language-dependent indenting.
-    filetype plugin indent on
-
-    " Put these in an autocmd group, so that we can delete them easily.
-    augroup vimrcEx
-    au!
-
-    " For all text files set 'textwidth' to 99 characters.
-    autocmd FileType text setlocal textwidth=99
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    " Also don't do it when the mark is in the first line, that is the default
-    " position when opening a file.
-    autocmd BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") |
-        \   exe "normal! g`\"" |
-        \ endif
-
-    augroup END
-else
-    " always set autoindenting on
-    set autoindent
-
-endif   " has("autocmd")
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
-endif
-
-" -----------------------------------------------------------------------------
-" Vimの内部エンコーディングをUTF-8に設定
+"--------------------------------------------------------------------------------------------------
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,euc-jp,sjis,iso-2022-jp
 set fileformats=unix,dos,mac
-if exists('&ambiwidth')
-    set ambiwidth=single
-endif
 
-" -----------------------------------------------------------------------------
-" Configuration for Go Language
-if isdirectory(globpath($GOPATH, "src/github.com/mdempsky/gocode/vim"))
-    set runtimepath+=globpath($GOPATH, "src/github.com/mdempsky/gocode/vim")
-    set completeopt=menu,preview
-    let g:go_template_autocreate = 0
-endif
+set autoread
+set backspace=2     " 1:indent,eol, 2:indent,eol,start(allow backspacing over everything in insert mode)
+set history=512     " keep 500 lines of command line history
+set wildmenu        " See :help wildmenu
+set wildmode=longest,list,full
 
-" -----------------------------------------------------------------------------
-" Binary editor mode: vim -b or *.bin to boot
-augroup BinaryXXD
-    autocmd!
-    autocmd BufReadPre  *.bin let &binary =1
-    autocmd BufReadPost * if &binary | silent %!xxd -g 1
-    autocmd BufReadPost * set ft=xxd | endif
-    autocmd BufWritePre * if &binary | %!xxd -r | endif
-    autocmd BufWritePost * if &binary | silent %!xxd -g 1
-    autocmd BufWritePost * set nomod | endif
-augroup END
+set number
+set ruler           " show the cursor position all the time
+set showcmd         " display incomplete commands
+set title
+set colorcolumn=100
+set laststatus=2    " See :help laststatus
+set listchars=tab:\|-,extends:<,eol:$
+set cmdheight=2
+set list
+set wrap
+set wrapscan
+
+set hlsearch
+set incsearch       " do incremental searching
+set noignorecase
+set cursorcolumn    " Highlight the screen column of the cursor(hl-CursorColumn)
+set nocursorline    " Highlight the screen line of the cursor(hl-CursorLine)
+set belloff=all     " Be quiet
+set smartcase
+
+set showmatch
+set formatoptions+=mM
+let format_allow_over_tw=1
 
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set colorcolumn=100
-" execute "set colorcolumn=" . join(range(81, 999), ',')
-
-" set shiftround
 set expandtab
 set smartindent
 set autoindent
-set backspace=2     " 'Backspace' can delete indent and CR/LF
-set wrapscan
-set showmatch
-set wildmenu        " See :help wildmenu
-set formatoptions+=mM
-let format_allow_over_tw=1
 
-" -----------------------------------------------------------------------------
-set noignorecase
-set smartcase
-set noincsearch
-
-set number
-set ruler
-set list
-set listchars=tab:\|-,extends:<,eol:$
-set wrap
-set laststatus=2    " See :help laststatus
-set cmdheight=2
-set showcmd
-set title
-
-" set nobackup
-set viminfo=
 set noswapfile
 set noundofile
-set autoread
 set backupdir=$HOME/var/spool/vim
-set wildmode=longest,list,full
 
-" -----------------------------------------------------------------------------
-abbr RULER \|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|
-abbr HLINE -----------------------------------------------------------------------------
-abbr ULINE _____________________________________________________________________________
-abbr ILINE #############################################################################
-abbr SLINE /////////////////////////////////////////////////////////////////////////////
-abbr PLINE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-abbr 4LINE dnl #########################################################################
+"--------------------------------------------------------------------------------------------------
+if exists('&ambiwidth') | set ambiwidth=single | endif
+if has('mouse') | set mouse=a | endif " In many terminal emulators the mouse works just fine, thus enable it.
 
-" -----------------------------------------------------------------------------
-" map <F2> :r!date +\%F
-" map <F2> a<C-R>=strftime("%F %T %z")<CR><Esc>
+" Mapping & Abbreviations
+"--------------------------------------------------------------------------------------------------
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo, so that you can undo CTRL-U
+" after inserting a line break.
+inoremap <C-U> <C-G>u<C-U>
+
 map  <F1> <ESC>
 imap <F1> <ESC>
 map  <F2> a<C-R>=strftime("%a, %e %b %Y %T %z (%Z)")<CR><Esc>
-map  <F3> :r!cat ~/.myaddr
+
+imap {} {}<Left>
+imap [] []<Left>
+imap () ()<Left>
+imap <> <><Left>
 
 nnoremap j gj
 nnoremap k gk
@@ -190,33 +92,74 @@ map <kPlus> <C-W>+
 map <kMinus> <C-W>-
 nmap <ESC><ESC> :nohlsearch<CR><ESC>
 
-" http://www.e2esound.com/wp/2010/11/07/add_vimrc_settings/
-" imap {} {}<Left>
-" imap [] []<Left>
-" imap () ()<Left>
-" imap <> <><Left>
+abbr RULER \|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|----\|
+abbr HLINE ---------------------------------------------------------------------------------------------------
+abbr ULINE ___________________________________________________________________________________________________
+abbr ILINE ###################################################################################################
+abbr SLINE ///////////////////////////////////////////////////////////////////////////////////////////////////
+abbr PLINE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+abbr 4LINE dnl ###############################################################################################
 
-"---------------------------------------------------------------------------
-" Do not load the following plug-ins.
-let loaded_gzip = 0                 " plugin/gzip.vim
-let loaded_getscriptPlugin = 0      " plugin/getScriptPlugin.vim
-let loaded_matchparen = 0           " plugin/matchparen.vim
-let loaded_netrwPlugin = 255        " plugin/netrwPlugin.vim
-let loaded_rrhelper = 255           " plugin/rrhelper.vim
-let loaded_spellfile_plugin = 255   " plugin/spellfile.vim
-let loaded_tarPlugin = 255          " plugin/tarPlugin.vim
-let TOhtml = 255                    " plugin/tohtml.vim
-"let loaded_vimballPlugin = 0       " plugin/vimballPlugin.vim
-let loaded_zipPlugin = 255          " plugin/zipPlugin.vim
-" let loaded_lightline = 0          " plugin/lightline.vim
+" Autocmd & Filetype
+"--------------------------------------------------------------------------------------------------
+if has("autocmd")
+    " Only do this part when compiled with support for autocommands.
+    " - Enable file type detection.
+    " - Use the default filetype settings, so that mail gets 'tw' set to 72, 'cindent' is on in C files, etc.
+    " - Also load indent files, to automatically do language-dependent indenting.
+    filetype plugin indent on
 
-" lightline.vim
-" https://github.com/itchyny/lightline.vim
-let g:lightline = { 'colorscheme': 'wombat' }
-let g:ruby_path = '' 
+    augroup vimrcEx
+        " Put these in an autocmd group, so that we can delete them easily.
+        au!
+        autocmd FileType text setlocal textwidth=99 " For all text files set 'textwidth' to 99 characters.
 
-" Indent Guides
-" https://github.com/nathanaelkane/vim-indent-guides
+        " When editing a file, always jump to the last known cursor position. Don't do it when the
+        " position is invalid or when inside an event handler (happens when dropping a file on gvim).
+        " Also don't do it when the mark is in the first line, that is the default position when opening a file.
+        autocmd BufReadPost *
+            \ if line("'\"") > 1 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
+    augroup END
+
+    augroup BinaryXXD
+        " Binary editor mode: vim -b or *.bin to boot
+        autocmd!
+        autocmd BufReadPre  *.bin let &binary =1
+        autocmd BufReadPost * if &binary | silent %!xxd -g 1
+        autocmd BufReadPost * set ft=xxd | endif
+        autocmd BufWritePre * if &binary | %!xxd -r | endif
+        autocmd BufWritePost * if &binary | silent %!xxd -g 1
+        autocmd BufWritePost * set nomod | endif
+    augroup END
+endif
+
+if !exists(":DiffOrig")
+    " Convenient command to see the difference between the current buffer and the file it was loaded
+    " from, thus the changes you made.  Only define it when not defined already.
+    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+endif
+
+
+
+" Plugins
+"--------------------------------------------------------------------------------------------------
+" The following plugins are disabled because I do not use these.
+let g:loaded_getscriptPlugin    = 1 " Vim script updater
+let g:loaded_gzip               = 1
+let g:loaded_logiPat            = 1
+let g:loaded_manpager           = 1
+let g:loaded_netrwPlugin        = 1
+let g:loaded_rrhelper           = 1 " vim-R helper
+let g:loaded_spellfile_plugin   = 1 " spell checker
+let g:loaded_tarPlugin          = 1
+let g:loaded_tohtml             = 1
+let g:loaded_tutor              = 1
+let g:loaded_vimballPlugin      = 1
+let g:loaded_zipPlugin          = 1
+
+" Indent Guides(https://github.com/nathanaelkane/vim-indent-guides)
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
