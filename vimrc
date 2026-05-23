@@ -141,8 +141,6 @@ if !exists(":DiffOrig")
     command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
 
-
-
 " Plugins
 "--------------------------------------------------------------------------------------------------
 " The following plugins are disabled because I do not use these.
@@ -167,11 +165,18 @@ let g:indent_guides_color_change_percent = 4
 let g:indent_guides_tab_guides = 0
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
-" Language libraries for Kaoriya
-" See http://code.google.com/p/macvim-kaoriya/wiki/Readme
-if has('kaoriya')
-    let $PERL_DLL = ''
-    let $PYTHON_DLL = ''
-    let $RUBY_DLL = ''
-endif
+let g:vimsyn_embed              = ''
+let g:markdown_fenced_languages = ['go', 'perl', 'ruby', 'sh']
+
+" https://github.com/vim-airline/vim-airline
+if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
+let g:airline_left_sep = '|'
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_theme = 'minimalist'
+let g:airline_theme = 'papercolor'
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 
