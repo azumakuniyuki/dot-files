@@ -1,6 +1,4 @@
 " $Id: dot.google-macvim-vimrc,v 1.7 2009/12/14 07:48:11 ak Exp $
-" An example for a vimrc file.
-"
 " Maintainer:   Bram Moolenaar <Bram@vim.org>
 " Last change:  2008 Jul 02
 "
