@@ -28,7 +28,7 @@ set history=512     " keep 500 lines of command line history
 set wildmenu        " See :help wildmenu
 set wildmode=longest,list,full
 
-set number
+set relativenumber
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set title
