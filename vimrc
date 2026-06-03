@@ -28,7 +28,7 @@ set history=512     " keep 500 lines of command line history
 set wildmenu        " See :help wildmenu
 set wildmode=longest,list,full
 
-set relativenumber
+set number
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set title
@@ -173,5 +173,4 @@ let s:airline_themes0 = ['base16_gruvbox_light_hard', 'base16_mocha', 'blood_red
 let s:random_seed    = reltime()[1]
 let s:theme_index    = s:random_seed % len(s:airline_themes0)
 let g:airline_theme  = s:airline_themes0[s:theme_index]
-let g:airline#extensions#tabline#enabled = 1
 
