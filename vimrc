@@ -80,11 +80,6 @@ map  <F1> <ESC>
 imap <F1> <ESC>
 map  <F2> a<C-R>=strftime("%a, %e %b %Y %T %z (%Z)")<CR><Esc>
 
-imap {} {}<Left>
-imap [] []<Left>
-imap () ()<Left>
-imap <> <><Left>
-
 nnoremap j gj
 nnoremap k gk
 nnoremap / /\v
@@ -140,6 +135,23 @@ if !exists(":DiffOrig")
     " from, thus the changes you made.  Only define it when not defined already.
     command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
+
+" Perl
+"--------------------------------------------------------------------------------------------------
+let perl_no_extended_vars = 1
+let perl_no_quote_fold = 1      " クォートの折りたたみを無効化
+let perl_no_debug = 1           " デバッグ用ハイライトを無効化
+let perl_include_pod = 0        " PODドキュメントの解析も無効化
+
+" 正規表現の複雑なネスト判定を抑える設定（Perl用ハイライト定義がこれらを参照する）
+let perl_no_function_signatures = 1
+let perl_no_sub_signatures = 1
+
+" - スクロール（カーソル移動）中はシンタックス解析を止める
+" - カーソル停止時の反応を速くする（デフォルトは4000ミリ秒と遅すぎるため）
+"autocmd CursorMoved,CursorMovedI *.pl,*.pm syntax off
+"autocmd CursorHold,CursorHoldI *.pl,*.pm syntax on
+"set updatetime=200
 
 " Plugins
 "--------------------------------------------------------------------------------------------------
